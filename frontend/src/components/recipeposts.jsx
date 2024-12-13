@@ -2,20 +2,21 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // import { fetchRecipes } from "../store/recipeSlice";
 import RecipeList from "./recipelist";
-
-const recipes = {};
+import { recipeAction } from "../store/recipe-slice";
+import { jwtDecode } from "jwt-decode";
 
 const RecipePosts = () => {
   const dispatch = useDispatch();
-  //   const { recipes, loading, error } = useSelector((state) => state.recipe);
 
-  //   useEffect(() => {
-  //     dispatch(fetchRecipes()); // Fetch recipes when the component mounts
-  //   }, [dispatch]);
+  useEffect(() => {
+    dispatch(recipeAction.fetchRecipes());
+  }, [dispatch]);
 
-  //   if (loading)
-  //     return <div className="text-center py-4">Loading recipes...</div>;
-  //   if (error) return <div className="text-center text-red-500">{error}</div>;
+  const recipes = useSelector((state) => state.recipes.recipes);
+
+  if (!recipes) {
+    return <div className="text-center bg-black mt-40">Loading recipes...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 sm:px-8 lg:px-16 py-6">

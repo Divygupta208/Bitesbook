@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const nameRef = useRef();
+  const usernameRef = useRef();
   const emailPhoneRef = useRef();
   const phoneRef = useRef();
   const passwordRef = useRef();
@@ -17,6 +18,7 @@ const Signup = () => {
 
   const [errors, setErrors] = useState({
     name: "",
+    username: "",
     email: "",
     password: "",
     usererror: "",
@@ -28,18 +30,29 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setErrors({ name: "", email: "", password: "", usererror: "" });
+    setErrors({
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      usererror: "",
+    });
 
     const emailOrPhone = emailPhoneRef.current.value;
     const password = passwordRef.current.value;
-    const username = isSignup ? nameRef.current.value : null;
+    const name = isSignup ? nameRef.current.value : null;
+    const username = isSignup ? usernameRef.current.value : null;
     const phoneno = isSignup ? phoneRef.current.value : null;
 
     let isValid = true;
     const newErrors = {};
 
-    if (isSignup && !username) {
+    if (isSignup && !name) {
       newErrors.name = "Name is required";
+      isValid = false;
+    }
+    if (isSignup && !username) {
+      newErrors.username = "username is required";
       isValid = false;
     }
 
@@ -73,6 +86,7 @@ const Signup = () => {
 
     const authData = isSignup
       ? {
+          name,
           username,
           email: emailOrPhone,
           phoneno,
@@ -100,12 +114,15 @@ const Signup = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
 
         const userData = {
-          name: data.username,
+          name: data.name,
+          username: data.username,
           email: data.usermail,
           phoneno: data.phoneno,
+          isAdmin: data.isAdmin,
+          profilePicture: data.profilePicture,
+          bio: data.bio,
         };
 
         if (isSignup) {
@@ -114,7 +131,7 @@ const Signup = () => {
           toast.success("Login successful!");
           dispatch(authAction.setToken(data.token));
           dispatch(authAction.setUserData(userData));
-          navigate("/chat");
+          navigate("/home");
         }
       } else {
         if (response.status === 404) {
@@ -167,6 +184,30 @@ const Signup = () => {
             <div>
               <label
                 className="block text-sm font-medium text-gray-600 mb-2"
+                htmlFor="name"
+              >
+                Name
+              </label>
+              <motion.input
+                type="text"
+                name="name"
+                id="name"
+                ref={nameRef}
+                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none transition duration-300"
+                placeholder="Enter your full name"
+                required={isSignup}
+                whileFocus={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+              )}
+            </div>
+          )}
+          {isSignup && (
+            <div>
+              <label
+                className="block text-sm font-medium text-gray-600 mb-2"
                 htmlFor="username"
               >
                 Username
@@ -175,15 +216,15 @@ const Signup = () => {
                 type="text"
                 name="username"
                 id="username"
-                ref={nameRef}
+                ref={usernameRef}
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none transition duration-300"
-                placeholder="Enter your username"
+                placeholder="Enter your username ex:- @winnypoo25"
                 required={isSignup}
                 whileFocus={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               />
-              {errors.name && (
-                <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">{errors.username}</p>
               )}
             </div>
           )}

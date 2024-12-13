@@ -11,14 +11,14 @@ router.delete(
   "/favorites/:recipeId",
   favsandcollsController.deleteFavoriteRecipe
 );
-router.post("collections/create", favsandcollsController.createCollection);
-router.get("collections", favsandcollsController.getCollections);
+router.post("/collections/create", favsandcollsController.createCollection);
+router.get("/collections", favsandcollsController.getCollections);
 router.put(
-  "collections/:collectionId",
+  "/collections/:collectionId",
   favsandcollsController.updateCollection
 );
 router.delete(
-  "collections/:collectionId",
+  "/collections/:collectionId",
   favsandcollsController.deleteCollection
 );
 

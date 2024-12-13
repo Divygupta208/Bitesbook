@@ -1,20 +1,21 @@
 import React, { useEffect } from "react";
 import RecipePosts from "../components/recipeposts";
-import { recipeAction } from "../store/recipe-slice";
+import MyRecipes from "../components/myrecipe";
 import { useDispatch } from "react-redux";
+import { recipeAction } from "../store/recipe-slice";
 
-const HomePage = () => {
+const MyRecipe = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(recipeAction.fetchRecipes());
-  }, [dispatch]);
+    dispatch(recipeAction.fetchMyRecipes());
+  }, []);
 
   return (
     <>
-      <RecipePosts />
+      <MyRecipes />
     </>
   );
 };
 
-export default HomePage;
+export default MyRecipe;

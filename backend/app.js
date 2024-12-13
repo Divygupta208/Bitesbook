@@ -12,7 +12,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 
 const User = require("./models/user");
 const Recipe = require("./models/recipe");
-const Review = require("./models/review");
+const Review = require("./models/reviews");
 const Favorite = require("./models/favorite");
 const Collection = require("./models/collection");
 const CollectionRecipe = require("./models/collectionrecipe");
@@ -26,16 +26,16 @@ const searchRoutes = require("./routes/recipebrowsing");
 const reviewRoutes = require("./routes/reviews");
 const socialRoutes = require("./routes/social");
 const adminRoutes = require("./routes/admin");
+const authorizeAdmin = require("./middleware/authAdmin");
 
 app.use("/user", userRoutes);
-app.use("/recipe", recipeRoutes);
-app.use("/manage", favandcolRoutes);
-app.use("/search", searchRoutes);
-app.use("/review", reviewRoutes);
-app.use("/social", socialRoutes);
-app.use("/admin", adminRoutes);
+app.use("/recipe", authenticateUser, recipeRoutes);
+app.use("/manage", authenticateUser, favandcolRoutes);
+app.use("/search", authenticateUser, searchRoutes);
+app.use("/review", authenticateUser, reviewRoutes);
+app.use("/social", authenticateUser, socialRoutes);
+app.use("/admin", authenticateUser, authorizeAdmin, adminRoutes);
 
-// -------------------------------
 User.hasMany(Recipe);
 Recipe.belongsTo(User);
 
