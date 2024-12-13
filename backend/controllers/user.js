@@ -23,23 +23,18 @@ const s3 = new AWS.S3({
 });
 
 const uploadToS3 = async (base64Data, filename) => {
-  // Decode base64 data
-
-  // Decode base64 data to a buffer
   const buffer = Buffer.from(base64Data.split(",")[1], "base64");
 
-  // Detect the file type from the buffer
   const fileTypeResult = await FileType.fromBuffer(buffer);
 
-  // Set default ContentType if file type cannot be determined
   const contentType = fileTypeResult?.mime || "application/octet-stream";
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
-    Key: filename, // Use the file name or generate a unique one
+    Key: filename,
     Body: buffer,
     ACL: "public-read",
-    ContentType: contentType, // Dynamically detected file type
+    ContentType: contentType,
   };
 
   return new Promise((resolve, reject) => {
@@ -49,7 +44,7 @@ const uploadToS3 = async (base64Data, filename) => {
         reject(err);
       } else {
         console.log("File uploaded successfully:", data.Location);
-        resolve(data.Location); // Return the S3 file URL
+        resolve(data.Location);
       }
     });
   });
@@ -144,7 +139,7 @@ exports.postLoginUser = async (req, res, next) => {
         phoneno: user.phoneno,
       },
       "b2a76f7c3e5f8d1a9c3b2e5d7f6a8c9b1e2d3f4a6b7c9e8d7f6b9c1a3e5d7f6b",
-      { expiresIn: "2h" }
+      { expiresIn: "3h" }
     );
     await t.commit();
     return res.status(200).json({
@@ -169,19 +164,17 @@ exports.postLoginUser = async (req, res, next) => {
 
 exports.getFavorites = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Assumes user is authenticated
+    const userId = req.user.id;
 
-    // Fetch favorite recipe IDs for the user
     const favorites = await Favorite.findAll({
       where: { userId: userId },
-      attributes: ["recipeId"], // Only select the recipeId field
+      attributes: ["recipeId"],
     });
 
     if (!favorites || favorites.length === 0) {
       return res.status(404).json({ message: "No favorites found." });
     }
 
-    // Map to extract an array of recipeId values
     const favoriteRecipeIds = favorites.map((fav) => fav.recipeId);
 
     res.status(200).json({ favoriteRecipeIds });

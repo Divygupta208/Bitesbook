@@ -2,12 +2,11 @@ const { Op } = require("sequelize");
 const Recipe = require("../models/recipe");
 
 exports.getSearchedRecipe = async (req, res, next) => {
-  const { query } = req.query; // Get search query from request
+  const { query } = req.query;
 
   console.log(query);
 
   try {
-    // Search in title, ingredients, and category
     const recipes = await Recipe.findAll({
       where: {
         [Op.or]: [

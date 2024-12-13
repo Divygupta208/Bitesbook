@@ -5,16 +5,14 @@ const Recipe = require("../models/recipe");
 
 exports.postCreateFavorites = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Logged-in user ID
-    const { recipeId } = req.params; // Recipe ID to add to favorites
+    const userId = req.user.id;
+    const { recipeId } = req.params;
 
-    // Check if the recipe exists
     const recipe = await Recipe.findByPk(recipeId);
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    // Check if the user has already favorited the recipe
     const existingFavorite = await Favorite.findOne({
       where: { userId, recipeId },
     });
@@ -25,7 +23,6 @@ exports.postCreateFavorites = async (req, res, next) => {
         .json({ message: "Recipe is already in favorites" });
     }
 
-    // Create a new favorite entry in the Favorite table
     await Favorite.create({
       userId,
       recipeId,
@@ -45,10 +42,9 @@ exports.postCreateFavorites = async (req, res, next) => {
 
 exports.deleteFavoriteRecipe = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Logged-in user ID
-    const { recipeId } = req.params; // Recipe ID to delete from favorites
+    const userId = req.user.id;
+    const { recipeId } = req.params;
 
-    // Check if the recipe exists in the user's favorites
     const favorite = await Favorite.findOne({
       where: { userId, recipeId },
     });
@@ -57,7 +53,6 @@ exports.deleteFavoriteRecipe = async (req, res, next) => {
       return res.status(404).json({ message: "Favorite recipe not found." });
     }
 
-    // Delete the favorite entry
     await favorite.destroy();
 
     res
@@ -74,20 +69,18 @@ exports.deleteFavoriteRecipe = async (req, res, next) => {
 
 exports.createCollection = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Logged-in user ID
-    const { name, recipeIds } = req.body; // Collection name and recipe IDs
-
+    const userId = req.user.id;
+    const { name, recipeIds } = req.body;
     // Create the collection
     const collection = await Collection.create({
       name: name,
       userId: userId,
     });
 
-    // Validate and associate recipes with the collection
     if (recipeIds && recipeIds.length > 0) {
       const validRecipes = await Recipe.findAll({
         where: { id: recipeIds },
-        attributes: ["id"], // Only fetch IDs for validation
+        attributes: ["id"],
       });
 
       if (validRecipes.length !== recipeIds.length) {
@@ -96,7 +89,6 @@ exports.createCollection = async (req, res, next) => {
           .json({ message: "Some recipe IDs are invalid or do not exist." });
       }
 
-      // Manually insert entries into CollectionRecipe
       const collectionRecipes = validRecipes.map((recipe) => ({
         CollectionId: collection.id,
         recipeId: recipe.id,
@@ -104,13 +96,11 @@ exports.createCollection = async (req, res, next) => {
       await CollectionRecipe.bulkCreate(collectionRecipes);
     }
 
-    // Fetch all recipe IDs associated with the collection
     const associatedRecipeIds = await CollectionRecipe.findAll({
       where: { CollectionId: collection.id },
       attributes: ["recipeId"],
     });
 
-    // Format the response
     const recipeIdArray = associatedRecipeIds.map((entry) => entry.recipeId);
 
     res.status(200).json({
@@ -118,7 +108,7 @@ exports.createCollection = async (req, res, next) => {
       collection: {
         id: collection.id,
         name: collection.name,
-        recipes: recipeIdArray, // Array of recipe IDs
+        recipes: recipeIdArray,
       },
     });
   } catch (error) {
@@ -131,15 +121,13 @@ exports.createCollection = async (req, res, next) => {
 
 exports.getCollections = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Logged-in user ID
+    const userId = req.user.id;
 
-    // Fetch all collections for the logged-in user
     const collections = await Collection.findAll({
       where: { userId: userId },
-      attributes: ["id", "name"], // Fetch only collection ID and name
+      attributes: ["id", "name"],
     });
 
-    // Fetch associated recipe IDs for each collection
     const collectionRecipes = await Promise.all(
       collections.map(async (collection) => {
         const recipes = await CollectionRecipe.findAll({
@@ -148,12 +136,11 @@ exports.getCollections = async (req, res, next) => {
         });
         return {
           collectionId: collection.id,
-          recipeIds: recipes.map((recipe) => recipe.recipeId), // Extract recipe IDs
+          recipeIds: recipes.map((recipe) => recipe.recipeId),
         };
       })
     );
 
-    // Transform collections into the desired format
     const formattedCollections = collections.map((collection) => {
       const matchingRecipes = collectionRecipes.find(
         (entry) => entry.collectionId === collection.id
@@ -182,10 +169,9 @@ exports.getCollections = async (req, res, next) => {
 exports.updateCollection = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { collectionId } = req.params; // Collection ID from request parameters
-    const { name, recipeIds } = req.body; // Updated name and recipes array
+    const { collectionId } = req.params;
+    const { name, recipeIds } = req.body;
 
-    // Find the collection to update
     const collection = await Collection.findOne({
       where: { id: collectionId, userId: userId },
     });
@@ -196,13 +182,11 @@ exports.updateCollection = async (req, res, next) => {
         .json({ message: "Collection not found or not authorized." });
     }
 
-    // Update the collection name if provided
     if (name) {
       collection.name = name;
       await collection.save();
     }
 
-    // Fetch existing recipe IDs for the collection
     const existingRecipes = await CollectionRecipe.findAll({
       where: { collectionId: collection.id },
       attributes: ["recipeId"],
@@ -210,7 +194,6 @@ exports.updateCollection = async (req, res, next) => {
 
     const existingRecipeIds = existingRecipes.map((entry) => entry.recipeId);
 
-    // Determine recipes to add and remove
     const recipesToAdd = recipeIds.filter(
       (recipeId) => !existingRecipeIds.includes(recipeId)
     );
@@ -218,7 +201,6 @@ exports.updateCollection = async (req, res, next) => {
       (recipeId) => !recipeIds.includes(recipeId)
     );
 
-    // Add new recipes
     if (recipesToAdd.length > 0) {
       const addPromises = recipesToAdd.map((recipeId) =>
         CollectionRecipe.create({ collectionId: collection.id, recipeId })
@@ -226,7 +208,6 @@ exports.updateCollection = async (req, res, next) => {
       await Promise.all(addPromises);
     }
 
-    // Remove recipes no longer in the collection
     if (recipesToRemove.length > 0) {
       const removePromises = recipesToRemove.map((recipeId) =>
         CollectionRecipe.destroy({
@@ -236,7 +217,6 @@ exports.updateCollection = async (req, res, next) => {
       await Promise.all(removePromises);
     }
 
-    // Fetch the updated collection with recipes
     const updatedCollection = await Collection.findOne({
       where: { id: collection.id },
       attributes: ["id", "name"],
@@ -248,7 +228,6 @@ exports.updateCollection = async (req, res, next) => {
       ],
     });
 
-    // Format the response
     const formattedCollection = {
       id: updatedCollection.id,
       name: updatedCollection.name,

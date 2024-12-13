@@ -5,7 +5,7 @@ const User = require("../models/user");
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.findAll({
-      attributes: { exclude: ["password"] }, // Exclude sensitive information like passwords
+      attributes: { exclude: ["password"] },
     });
     res.status(200).json(users);
   } catch (error) {

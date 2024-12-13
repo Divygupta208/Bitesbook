@@ -13,23 +13,18 @@ const s3 = new AWS.S3({
 });
 
 const uploadToS3 = async (base64Data, filename) => {
-  // Decode base64 data
-
-  // Decode base64 data to a buffer
   const buffer = Buffer.from(base64Data.split(",")[1], "base64");
 
-  // Detect the file type from the buffer
   const fileTypeResult = await FileType.fromBuffer(buffer);
 
-  // Set default ContentType if file type cannot be determined
   const contentType = fileTypeResult?.mime || "application/octet-stream";
 
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
-    Key: filename, // Use the file name or generate a unique one
+    Key: filename,
     Body: buffer,
     ACL: "public-read",
-    ContentType: contentType, // Dynamically detected file type
+    ContentType: contentType,
   };
 
   return new Promise((resolve, reject) => {
@@ -39,7 +34,7 @@ const uploadToS3 = async (base64Data, filename) => {
         reject(err);
       } else {
         console.log("File uploaded successfully:", data.Location);
-        resolve(data.Location); // Return the S3 file URL
+        resolve(data.Location);
       }
     });
   });
@@ -95,7 +90,6 @@ exports.postCreateRecipe = async (req, res, next) => {
 };
 exports.getAllRecipes = async (req, res, next) => {
   try {
-    // Step 1: Fetch all recipes including required fields
     const recipes = await Recipe.findAll({
       attributes: [
         "id",
@@ -112,14 +106,12 @@ exports.getAllRecipes = async (req, res, next) => {
       ],
     });
 
-    // Step 2: Fetch authors (users) for each recipe
     const userIds = recipes.map((recipe) => recipe.userId);
     const users = await User.findAll({
       where: { id: userIds },
       attributes: ["id", "name", "username", "profilePicture"],
     });
 
-    // Step 3: Fetch followers to check if the logged-in user follows the author
     const followers = await Follow.findAll({
       where: { followerId: req.user.id },
       attributes: ["followedId"],
@@ -127,7 +119,6 @@ exports.getAllRecipes = async (req, res, next) => {
 
     const followingUserIds = followers.map((follow) => follow.followedId);
 
-    // Step 4: Fetch reviews and calculate average rating
     const reviews = await Review.findAll({
       attributes: [
         "recipeId",
@@ -141,7 +132,6 @@ exports.getAllRecipes = async (req, res, next) => {
       return acc;
     }, {});
 
-    // Step 5: Format the data
     const formattedRecipes = recipes.map((recipe) => {
       const author = users.find((user) => user.id === recipe.userId);
       const averageRating = reviewMap[recipe.id] || 0;
@@ -220,7 +210,7 @@ exports.getContributions = async (req, res, next) => {
         cookingTime: recipeData.cookingTime,
         servings: recipeData.servings,
         category: recipeData.category,
-        ratings: parseFloat(recipeData.averageRating) || 0, // Use average rating or default to 0
+        ratings: parseFloat(recipeData.averageRating) || 0,
       };
     });
 
