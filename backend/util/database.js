@@ -1,9 +1,14 @@
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize("bitebook", "root", "Dg@132000", {
-  dialect: "mysql",
-  host: "localhost",
-  timezone: "+05:30",
-});
+const sequelize = new Sequelize(
+  process.env.MySQL_DATABASE_NAME,
+  process.env.MySQL_DATABASE_ID,
+  process.env.MySQL_DATABASE_PASS,
+  {
+    dialect: "mysql",
+    host: process.env.MySQL_DBHOST,
+    timezone: "+05:30",
+  }
+);
 
 module.exports = sequelize;
