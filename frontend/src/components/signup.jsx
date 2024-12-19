@@ -154,20 +154,14 @@ const Signup = () => {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-r from-amber-400 to-[#f6ba98]">
-      <img
-        src={"chat-chat-svgrepo-com.svg"}
-        className="absolute top-0 left-50 w-[80vw] lg:w-auto opacity-25"
-        alt="wave background"
-      />
-
       <motion.div
-        className="relative z-10 mb-0 lg:mb-0 bg-white shadow-lg rounded-lg p-4 lg:p-8 w-80 h-[75vh] lg:h-full lg:w-full max-w-lg"
+        className="relative z-10 mb-0 lg:mb-0 bg-white shadow-lg rounded-lg p-4 lg:p-8 w-80 h-[75vh] lg:h-full lg:w-full max-w-lg overflow-scroll lg:overflow-hidden"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <motion.img
-          src={"chat-chat-svgrepo-com.svg"}
+          src={"/public/recipe-svgrepo-com.svg"}
           alt="Chat Illustration"
           className="w-20 h-20 mx-auto mb-6"
           initial={{ scale: 0.8, opacity: 0 }}

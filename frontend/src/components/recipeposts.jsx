@@ -14,6 +14,8 @@ const RecipePosts = () => {
 
   const recipes = useSelector((state) => state.recipes.recipes);
 
+  console.log(recipes);
+
   if (!recipes) {
     return <div className="text-center bg-black mt-40">Loading recipes...</div>;
   }
