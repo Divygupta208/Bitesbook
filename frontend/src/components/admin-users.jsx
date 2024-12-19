@@ -9,13 +9,16 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:3000/admin/users", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://my-api.zapto.org/bitesbook/admin/users",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -26,7 +29,7 @@ const UserManagement = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/users/${userId}`,
+        `https://my-api.zapto.org/bitesbook/admin/users/${userId}`,
         {
           method: "PATCH",
           headers: {
@@ -50,7 +53,7 @@ const UserManagement = () => {
   const handleDeleteUser = async (userId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/users/${userId}`,
+        `https://my-api.zapto.org/bitesbook/admin/users/${userId}`,
         {
           method: "DELETE",
           headers: {

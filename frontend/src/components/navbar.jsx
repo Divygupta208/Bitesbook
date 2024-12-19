@@ -31,7 +31,7 @@ const Navbar = () => {
     if (debouncedSearchTerm.trim() !== "") {
       try {
         const response = await fetch(
-          `http://localhost:3000/search/recipes?query=${encodeURIComponent(
+          `https://my-api.zapto.org/bitesbook/search/recipes?query=${encodeURIComponent(
             debouncedSearchTerm
           )}`,
           {

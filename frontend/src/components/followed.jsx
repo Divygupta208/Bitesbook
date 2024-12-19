@@ -15,7 +15,7 @@ const Followed = ({ type, userId, onClose }) => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:3000/social/${type}/${userId}`,
+        `https://my-api.zapto.org/bitesbook/social/${type}/${userId}`,
         {
           method: "GET",
           headers: {
@@ -38,7 +38,7 @@ const Followed = ({ type, userId, onClose }) => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:3000/social/unfollow/${user}`,
+        `https://my-api.zapto.org/bitesbook/social/unfollow/${user}`,
         {
           method: "DELETE",
           headers: {

@@ -90,8 +90,8 @@ const AddRecipeForm = ({ edit, currentRecipe }) => {
     try {
       const token = localStorage.getItem("token");
       const endpoint = edit
-        ? `http://localhost:3000/recipe/update/${currentRecipe.id}`
-        : "http://localhost:3000/recipe/create";
+        ? `https://my-api.zapto.org/bitesbook/recipe/update/${currentRecipe.id}`
+        : "https://my-api.zapto.org/bitesbook/recipe/create";
 
       const method = edit ? "PATCH" : "POST";
 

@@ -10,11 +10,14 @@ const UserFeed = () => {
     const fetchFeed = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3000/social/feed", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Pass the token here
-          },
-        });
+        const response = await axios.get(
+          "https://my-api.zapto.org/bitesbook/social/feed",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Pass the token here
+            },
+          }
+        );
         setFeed(response.data);
         setLoading(false);
       } catch (error) {

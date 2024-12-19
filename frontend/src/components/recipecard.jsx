@@ -16,7 +16,7 @@ const RecipeCard = ({ recipe }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/social/${type}/${userId}`,
+        `https://my-api.zapto.org/bitesbook/social/${type}/${userId}`,
         {
           method: isFollowing ? "DELETE" : "POST",
           headers: {

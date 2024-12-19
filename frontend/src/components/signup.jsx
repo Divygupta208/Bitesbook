@@ -98,8 +98,8 @@ const Signup = () => {
         };
 
     const url = isSignup
-      ? "http://localhost:3000/user/signup"
-      : "http://localhost:3000/user/login";
+      ? "https://my-api.zapto.org/bitesbook/user/signup"
+      : "https://my-api.zapto.org/bitesbook/user/login";
 
     try {
       setLoading(true);

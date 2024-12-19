@@ -30,7 +30,7 @@ const MyRecipes = () => {
   const handleDeleteRecipe = async (recipeId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/recipe/delete/${recipeId}`,
+        `https://my-api.zapto.org/bitesbook/recipe/delete/${recipeId}`,
         {
           method: "DELETE",
           headers: {

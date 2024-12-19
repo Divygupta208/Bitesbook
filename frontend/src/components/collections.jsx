@@ -43,8 +43,8 @@ const CollectionsPage = () => {
     };
 
     const url = isEditing
-      ? `http://localhost:3000/manage/collections/${selectedCollection.id}`
-      : "http://localhost:3000/manage/collections/create";
+      ? `https://my-api.zapto.org/bitesbook/manage/collections/${selectedCollection.id}`
+      : "https://my-api.zapto.org/bitesbook/manage/collections/create";
 
     try {
       const response = await fetch(url, {
@@ -91,7 +91,7 @@ const CollectionsPage = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/manage/collections/${collectionId}`,
+        `https://my-api.zapto.org/bitesbook/manage/collections/${collectionId}`,
         {
           method: "DELETE",
           headers: {

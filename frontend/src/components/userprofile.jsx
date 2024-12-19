@@ -59,7 +59,7 @@ const UserProfileSidebar = ({ isOpen, onClose }) => {
   const handleSave = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/user/update/${userId}`,
+        `https://my-api.zapto.org/bitesbook/user/update/${userId}`,
         {
           method: "PATCH",
           body: JSON.stringify(formData),

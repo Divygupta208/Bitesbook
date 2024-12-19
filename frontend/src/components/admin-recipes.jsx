@@ -9,13 +9,16 @@ const RecipeManagement = () => {
 
   const fetchRecipes = async () => {
     try {
-      const response = await fetch("http://localhost:3000/admin/recipes", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "https://my-api.zapto.org/bitesbook/admin/recipes",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       setRecipes(data);
     } catch (error) {
@@ -26,7 +29,7 @@ const RecipeManagement = () => {
   const handleDeleteRecipe = async (recipeId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/admin/recipes/${recipeId}`,
+        `https://my-api.zapto.org/bitesbook/admin/recipes/${recipeId}`,
         {
           method: "DELETE",
           headers: {

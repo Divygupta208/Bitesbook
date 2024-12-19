@@ -31,7 +31,7 @@ const RecipeDetails = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:3000/review/recipe/${recipeid}`,
+        `https://my-api.zapto.org/bitesbook/review/recipe/${recipeid}`,
         {
           method: "GET",
           headers: {
@@ -57,7 +57,7 @@ const RecipeDetails = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:3000/review/addreview/${recipeid}`,
+        `https://my-api.zapto.org/bitesbook/review/addreview/${recipeid}`,
         {
           method: "POST",
           headers: {
@@ -85,7 +85,7 @@ const RecipeDetails = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:3000/manage/add-favorites/${recipeid}`,
+        `https://my-api.zapto.org/bitesbook/manage/add-favorites/${recipeid}`,
         {
           method: "POST",
           headers: {

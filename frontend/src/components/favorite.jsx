@@ -25,7 +25,7 @@ const FavoriteRecipes = () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `http://localhost:3000/manage/favorites/${recipeId}`,
+        `https://my-api.zapto.org/bitesbook/manage/favorites/${recipeId}`,
         {
           method: "DELETE",
           headers: {
